@@ -4,7 +4,7 @@ const endPoint = import.meta.env.VITE_REACT_API_URL;
 
 const login = async (user) => {
     try {
-        const response = await axios.post(`${endPoint}CRMWeb/Login`, user);
+        const response = await axios.post(`${endPoint}user/login`, user);
         return response.data;
     } catch (error) {
         throw error.response ? error.response : new Error('Error de red');

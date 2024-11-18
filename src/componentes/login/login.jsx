@@ -1,24 +1,49 @@
+// LoginFormulario.jsx
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify'; // Solo necesitas importar 'toast'
+import ServiceLogin from '../../servicios/ServiceLogin';
 
 const LoginFormulario = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Validación simple
-    if (!email || !password) {
+
+    if (loading) return;
+    if (!username || !password) {
       setError('Por favor, ingresa todos los campos');
       return;
     }
-    
-    // Aquí puedes agregar la lógica para autenticar al usuario
-    // Por ejemplo, hacer una solicitud HTTP a una API
-    
-    console.log('Email:', email);
-    console.log('Password:', password);
+
+    setError('');
+    setLoading(true);
+
+    try {
+      const user = { username, password };
+      const response = await ServiceLogin.login(user);
+      localStorage.setItem('user', JSON.stringify(response));
+      
+      toast.success('Inicio de sesión exitoso', { autoClose: 3000 });
+
+      navigate('/usuarios');
+
+    } catch (error) {
+      const errorMessage =
+        error.status === 401
+          ? 'Credenciales incorrectas'
+          : 'Ocurrió un error al iniciar sesión';
+      setError(errorMessage);
+
+      toast.error(error.data?.message || 'Error al iniciar sesión', { autoClose: 3000 });
+      console.error('Error al iniciar sesión:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -28,45 +53,48 @@ const LoginFormulario = () => {
           <div className="card">
             <div className="card-body">
               <h3 className="card-title text-center mb-4">Iniciar sesión</h3>
-              
-              {/* Mostrar error si no se llenaron los campos */}
+
               {error && <div className="alert alert-danger">{error}</div>}
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-3">
-                  <label htmlFor="email" className="form-label">Correo electrónico</label>
-                  <input 
-                    type="email" 
-                    className="form-control" 
-                    id="email" 
-                    value={email} 
-                    onChange={(e) => setEmail(e.target.value)} 
-                    placeholder="Introduce tu correo electrónico" 
-                    required 
+                  <label htmlFor="username" className="form-label">
+                    Usuario
+                  </label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Introduce tu correo electrónico"
+                    required
                   />
                 </div>
-                
+
                 <div className="mb-3">
-                  <label htmlFor="password" className="form-label">Contraseña</label>
-                  <input 
-                    type="password" 
-                    className="form-control" 
-                    id="password" 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    placeholder="Introduce tu contraseña" 
-                    required 
+                  <label htmlFor="password" className="form-label">
+                    Contraseña
+                  </label>
+                  <input
+                    type="password"
+                    className="form-control"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Introduce tu contraseña"
+                    required
                   />
                 </div>
-                
-                <button type="submit" className="btn btn-primary w-100">
-                  Iniciar sesión
+
+                <button
+                  type="submit"
+                  className="btn btn-primary w-100"
+                  disabled={loading}
+                >
+                  {loading ? 'Cargando...' : 'Iniciar sesión'}
                 </button>
               </form>
-              
-              <div className="mt-3 text-center">
-                <small>¿No tienes una cuenta? <a href="/registro">Regístrate</a></small>
-              </div>
             </div>
           </div>
         </div>
