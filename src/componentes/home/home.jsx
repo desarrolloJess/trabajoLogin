@@ -15,7 +15,7 @@ const HomeUsuarios = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('user'); 
-    navigate('/'); 
+    navigate('/logout'); 
   };
 
   return (

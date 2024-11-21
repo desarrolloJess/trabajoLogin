@@ -5,6 +5,7 @@ import LoginFormulario from './componentes/login/login';
 import HomeUsuarios from './componentes/home/home';
 import { ToastContainer } from 'react-toastify'; 
 import 'react-toastify/dist/ReactToastify.css'; 
+import Logout from './componentes/logout/logout';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
 
       <Routes>
         <Route path="/" element={ <LoginFormulario/> } />
+        <Route path="/logout" element={ <Logout/> } />
         <Route path="usuarios" element={
           <ProtectedRoute>
             <HomeUsuarios />

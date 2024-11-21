@@ -5,8 +5,8 @@ import { toast } from 'react-toastify'; // Solo necesitas importar 'toast'
 import ServiceLogin from '../../servicios/ServiceLogin';
 
 const LoginFormulario = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('ethanm');
+  const [password, setPassword] = useState('ethanmpass');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -67,7 +67,7 @@ const LoginFormulario = () => {
                     id="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    placeholder="Introduce tu correo electrónico"
+                    placeholder="Introduce tu usuario"
                     required
                   />
                 </div>
